@@ -1,0 +1,67 @@
+{
+	"name": "fastify-multer-adapter",
+	"version": "0.0.0",
+	"description": "Use the official multer, with its security fixes and storage engines, as Fastify v5 preHandlers. A drop-in replacement for fastify-multer",
+	"license": "MIT",
+	"author": "Ankur Dubey (https://github.com/RagedPanda)",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/RagedPanda/fastify-multer-adapter.git"
+	},
+	"type": "module",
+	"main": "./dist/cjs/index.js",
+	"types": "./dist/cjs/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"types": "./dist/cjs/index.d.ts",
+				"default": "./dist/cjs/index.js"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"sideEffects": false,
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"build": "node -e \"fs.rmSync('dist', {recursive: true, force: true})\" && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/mark-cjs.ts",
+		"typecheck": "tsc --noEmit",
+		"test": "node --test \"test/**/*.test.ts\"",
+		"coverage": "node --test --experimental-test-coverage --test-coverage-exclude=\"test/**\" --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 \"test/**/*.test.ts\"",
+		"bench": "node bench/index.ts",
+		"prepublishOnly": "npm run typecheck && npm test && npm run build"
+	},
+	"keywords": [
+		"fastify",
+		"fastify-plugin",
+		"multer",
+		"fastify-multer",
+		"multipart",
+		"multipart/form-data",
+		"form-data",
+		"upload",
+		"file upload",
+		"busboy"
+	],
+	"peerDependencies": {
+		"fastify": "^5.0.0",
+		"multer": "^2.5.0"
+	},
+	"devDependencies": {
+		"@fastify/multipart": "10.1.6",
+		"@types/node": "^26.6.6",
+		"fastify": "5.12.7",
+		"fastify-multer": "2.0.3",
+		"fastify4": "npm:fastify@4.29.1",
+		"multer": "2.5.0",
+		"typescript": "^7.0.2"
+	}
+}
