@@ -49,7 +49,12 @@
 		"form-data",
 		"upload",
 		"file upload",
-		"busboy"
+		"busboy",
+		"form",
+		"post",
+		"formdata",
+		"middleware",
+		"fileupload"
 	],
 	"peerDependencies": {
 		"fastify": "^5.0.0",
