@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  peer-versions:
+    # The oldest and the newest supported releases of each peer dependency.
+    strategy:
+      matrix:
+        include:
+          - fastify: 5.0.0
+            multer: 2.5.0
+          - fastify: latest
+            multer: 2.5.0
+          - fastify: latest
+            multer: 2
+    name: fastify ${{ matrix.fastify }}, multer ${{ matrix.multer }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm install --no-save fastify@${{ matrix.fastify }} multer@${{ matrix.multer }}
+      - run: npm run typecheck
+      - run: npm test
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      # Fails the job if line, branch or function coverage drops below 100%.
+      - run: npm run coverage
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      # Checks that the ESM and CommonJS builds each resolve with their own types.
+      - run: npx --yes @arethetypeswrong/cli@0.18.5 --pack
+      # A small benchmark run, so the script keeps working against the current API.
+      - run: npm run bench
+        env:
+          BENCH_REQUESTS: 50
+          BENCH_RUNS: 1
