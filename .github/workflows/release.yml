@@ -24,12 +24,9 @@ jobs:
       - name: Read the release notes from CHANGELOG.md
         run: node scripts/release-notes.ts "${GITHUB_REF_NAME#v}" > "$RUNNER_TEMP/release-notes.md"
       - run: npm ci --ignore-scripts
-      # Uses npm trusted publishing (OIDC) once it is set up on npmjs.com; until then, the NPM_TOKEN secret.
-      # A version already on npm is skipped, so a tag for a version published by hand, or a re-run, still
-      # creates the GitHub release.
+      # Uses npm trusted publishing (OIDC), so no token is stored anywhere. A version already on npm is
+      # skipped, so a tag for a version published by hand, or a re-run, still creates the GitHub release.
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           package="$(node -p "require('./package.json').name")@${GITHUB_REF_NAME#v}"
           if npm view "$package" version > /dev/null 2>&1; then
@@ -38,10 +35,10 @@ jobs:
             npm publish --provenance --access public
           fi
       # npm can hold a publish for maintainer approval and still exit 0, so check the version is installable
-      # before announcing it. The registry takes a few seconds to show a new version.
+      # before announcing it. The registry can take a few minutes to show a new package or version.
       - name: Check the version is on npm
         run: |
-          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+          for attempt in $(seq 1 30); do
             npm view "fastify-multer-adapter@${GITHUB_REF_NAME#v}" version --prefer-online > /dev/null 2>&1 && exit 0
             sleep 10
           done
