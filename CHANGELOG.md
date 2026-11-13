@@ -7,4 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `multer(options)` with `single()`, `array()`, `fields()`, `none()` and `any()` upload handlers that run the official multer 2.5 on Fastify 5 routes, as `preHandler` or `preValidation` hooks.
+- `multer.contentParser`, a Fastify 5 content type parser for `multipart/form-data` that leaves the body for multer to read, plus `request.isMultipart()`.
+- `request.file`, `request.files` and `request.body` typed like fastify-multer, so moving from fastify-multer is an import change.
+- `fileFilter`, storage engines and a `limits` function receive the Fastify request, so they can read `request.user`, `request.id` and other decorations.
+- Upload errors carry an HTTP status: 413 for size and count limits, 400 for other `MulterError`s, malformed bodies and closed connections.
+- `fieldNestingDepth` defaults to 10 and `fieldArrayIndexLimit` to 1000, which blocks the field-name payloads of GHSA-72gw-mp4g-v24j and GHSA-535w-7cp7-47q4 out of the box.
+- Clear errors instead of hangs when an `onRequest` hook already read the body or the client closed the connection before the upload started.
+- ESM and CommonJS builds, each with its own types.
+
 [unreleased]: https://github.com/RagedPanda/fastify-multer-adapter/commits/main
