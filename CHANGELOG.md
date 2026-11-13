@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-13
+
 ### Added
 
 - `multer(options)` with `single()`, `array()`, `fields()`, `none()` and `any()` upload handlers that run the official multer 2.5 on Fastify 5 routes, as `preHandler` or `preValidation` hooks.
@@ -18,4 +20,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clear errors instead of hangs when an `onRequest` hook already read the body or the client closed the connection before the upload started.
 - ESM and CommonJS builds, each with its own types.
 
-[unreleased]: https://github.com/RagedPanda/fastify-multer-adapter/commits/main
+[Unreleased]: https://github.com/RagedPanda/fastify-multer-adapter/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/RagedPanda/fastify-multer-adapter/releases/tag/v0.1.0

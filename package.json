@@ -1,6 +1,6 @@
 {
 	"name": "fastify-multer-adapter",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Use the official multer, with its security fixes and storage engines, as Fastify v5 preHandlers. A drop-in replacement for fastify-multer",
 	"license": "MIT",
 	"author": "Ankur Dubey (https://github.com/RagedPanda)",
